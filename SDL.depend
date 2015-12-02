@@ -317,10 +317,14 @@
 	"begin_code.h"
 	"close_code.h"
 
-1448969899 /home/jrojo/Projects/C/SDL/include/EntornoGrafico.h
+1449048035 /home/jrojo/Projects/C/SDL/include/EntornoGrafico.h
 	<SDL.h>
 	<iostream>
+	<string>
 
-1448969901 source:/home/jrojo/Projects/C/SDL/src/EntornoGrafico.cpp
+1449045709 source:/home/jrojo/Projects/C/SDL/src/EntornoGrafico.cpp
+	"EntornoGrafico.h"
+
+1448990878 source:/home/jrojo/Projects/C/SDL/src/main.cpp
 	"EntornoGrafico.h"
 

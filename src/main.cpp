@@ -13,15 +13,7 @@ int main( int argc, char* args[] )
 {
     EntornoGrafico x;
 
-    if( !x.loadMedia() )
-    {
-		cout << "Failed to load media!\n" ;
-	}
-	else
-	{
-	    x.showImage();
-	}
-
+    x.loopUser();
 
 	return 0;
 }

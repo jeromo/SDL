@@ -7,13 +7,16 @@ EntornoGrafico::EntornoGrafico()
 
 EntornoGrafico::~EntornoGrafico()
 {
-    SDL_FreeSurface( pHelloWorld );
-    pHelloWorld = NULL;
+	for( int i = 0; i < KEY_PRESS_SURFACE_TOTAL; ++i )
+	{
+		SDL_FreeSurface( pKeyPressSurfaces[ i ] );
+	}
 
-    SDL_DestroyWindow( pWindow );
-    pWindow = NULL;
+	//Destroy window
+	SDL_DestroyWindow( pWindow );
 
-    SDL_Quit();
+	//Quit SDL subsystems
+	SDL_Quit();
 }
 
 void EntornoGrafico::init()
@@ -38,25 +41,111 @@ void EntornoGrafico::init()
 
     }
 
+    loadSurfaces();
 }
 
-bool EntornoGrafico::loadMedia()
+void EntornoGrafico::loadSurfaces()
 {
-    int success = true;
-    pHelloWorld = SDL_LoadBMP( "/home/jrojo/Projects/C/02_getting_an_image_on_the_screen/hello_world.bmp" );
-    if( pHelloWorld == NULL )
+    string name_files[] = {"/press.bmp", "/up.bmp", "/down.bmp", "/left.bmp", "/right.bmp" };
+
+    for (int i = KEY_PRESS_SURFACE_DEFAULT; i <  KEY_PRESS_SURFACE_TOTAL; i++)
     {
-        cout << "Unable to load image /home/jrojo/Projects/C/02_getting_an_image_on_the_screen/hello_world.bmp " << SDL_GetError() <<"\n";
-        success = false;
+        pKeyPressSurfaces[i] = loadSurface( IMAGES_DIR + name_files[i] );
+    }
+}
+
+SDL_Surface *EntornoGrafico::loadSurface( string path )
+{
+	try
+	{
+        SDL_Surface* loadedSurface = SDL_LoadBMP( path.c_str() );
+        if ( loadedSurface == NULL )
+        {
+            cout << "Error en SDL_LoadBMP " + path + "\n";
+            throw  ERR_SDL_LOAD_BMP;
+        }
+        SDL_Surface* optimizedSurface = SDL_ConvertSurface( loadedSurface, pScreenSurface->format, NULL );
+        if ( optimizedSurface == NULL )
+        {
+            cout << "Error en SDL_Convert Surface\n";
+            throw  ERR_SDL_LOAD_BMP;
+        }
+		SDL_FreeSurface( loadedSurface );
+
+        return optimizedSurface;
+
+	}
+    catch ( int e)
+    {
+        cout << "Error "<< e << "SDL_Error: " << SDL_GetError() <<"\n";
+
+        exit (e);
+
     }
 
-    return success;
 }
+
 
 void EntornoGrafico::showImage()
 {
-    SDL_BlitSurface( pHelloWorld, NULL, pScreenSurface, NULL );
+    SDL_Rect stretchRect;
+    stretchRect.x = 0;
+    stretchRect.y = 0;
+    stretchRect.w = SCREEN_WIDTH;
+    stretchRect.h = SCREEN_HEIGHT;
+
+    SDL_BlitScaled( pCurrentSurface, NULL, pScreenSurface, &stretchRect );
     SDL_UpdateWindowSurface( pWindow );
 
-    SDL_Delay( 2000 );
+}
+
+
+void EntornoGrafico::loopUser()
+{
+    bool quit = false;
+    SDL_Event e;
+
+    pCurrentSurface = pKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
+    showImage();
+
+
+    while( !quit )
+    {
+        //Handle events on queue
+        while( SDL_PollEvent( &e ) != 0 )
+        {
+            //User requests quit
+            if( e.type == SDL_QUIT )
+            {
+                quit = true;
+            }
+            else if( e.type == SDL_KEYDOWN )
+            {
+                //Select surfaces based on key press
+                switch( e.key.keysym.sym )
+                {
+                case SDLK_UP:
+                    pCurrentSurface = pKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ];
+                    break;
+
+                case SDLK_DOWN:
+                    pCurrentSurface = pKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ];
+                    break;
+
+                case SDLK_LEFT:
+                    pCurrentSurface = pKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ];
+                    break;
+
+                case SDLK_RIGHT:
+                    pCurrentSurface = pKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ];
+                    break;
+
+                default:
+                    pCurrentSurface = pKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
+                    break;
+                }
+                showImage();
+            }
+        }
+    }
 }
