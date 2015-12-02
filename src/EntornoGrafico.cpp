@@ -3,19 +3,24 @@
 EntornoGrafico::EntornoGrafico()
 {
     init();
+
+    for (int i = KEY_PRESS_SURFACE_DEFAULT; i <  KEY_PRESS_SURFACE_TOTAL; i++)
+    {
+        pKeyPressSurfaces[i] = NULL;
+    }
 }
 
 EntornoGrafico::~EntornoGrafico()
 {
 	for( int i = 0; i < KEY_PRESS_SURFACE_TOTAL; ++i )
 	{
-		SDL_FreeSurface( pKeyPressSurfaces[ i ] );
+	    if (pKeyPressSurfaces[ i ] != NULL)
+            SDL_FreeSurface( pKeyPressSurfaces[ i ] );
 	}
 
-	//Destroy window
 	SDL_DestroyWindow( pWindow );
 
-	//Quit SDL subsystems
+	IMG_Quit();
 	SDL_Quit();
 }
 
@@ -28,7 +33,11 @@ void EntornoGrafico::init()
 
         pWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
         if( pWindow == NULL )
-            throw ERR_SDL_CREATE_WIONDOW;
+            throw ERR_SDL_INIT;
+
+        int imgFlags = IMG_INIT_PNG;
+        if( !( IMG_Init( imgFlags ) & imgFlags ) )
+            throw ERR_SDL_INIT;
 
         pScreenSurface = SDL_GetWindowSurface( pWindow );
 
@@ -41,7 +50,6 @@ void EntornoGrafico::init()
 
     }
 
-    loadSurfaces();
 }
 
 void EntornoGrafico::loadSurfaces()
@@ -52,17 +60,36 @@ void EntornoGrafico::loadSurfaces()
     {
         pKeyPressSurfaces[i] = loadSurface( IMAGES_DIR + name_files[i] );
     }
+    //JRM Probar un png
+    pKeyPressSurfaces[0] = loadSurface( "/home/jrojo/Projects/C/06_extension_libraries_and_loading_other_image_formats/loaded.png");
 }
 
 SDL_Surface *EntornoGrafico::loadSurface( string path )
+
+
 {
-	try
-	{
-        SDL_Surface* loadedSurface = SDL_LoadBMP( path.c_str() );
-        if ( loadedSurface == NULL )
+    try
+    {
+        SDL_Surface* loadedSurface;
+
+        if (path.find( ".png") != string::npos)
         {
-            cout << "Error en SDL_LoadBMP " + path + "\n";
-            throw  ERR_SDL_LOAD_BMP;
+            loadedSurface = IMG_Load( path.c_str() );
+
+            if( loadedSurface == NULL )
+            {
+                cout <<"Unable to load image " << path << "SDL_image Error "<< IMG_GetError()  <<"\n";
+                throw  ERR_SDL_LOAD_BMP;
+            }
+        }
+        else
+        {
+            loadedSurface = SDL_LoadBMP( path.c_str() );
+            if ( loadedSurface == NULL )
+            {
+                cout << "Error en SDL_LoadBMP " + path + "\n";
+                throw  ERR_SDL_LOAD_BMP;
+            }
         }
         SDL_Surface* optimizedSurface = SDL_ConvertSurface( loadedSurface, pScreenSurface->format, NULL );
         if ( optimizedSurface == NULL )
@@ -70,11 +97,11 @@ SDL_Surface *EntornoGrafico::loadSurface( string path )
             cout << "Error en SDL_Convert Surface\n";
             throw  ERR_SDL_LOAD_BMP;
         }
-		SDL_FreeSurface( loadedSurface );
+        SDL_FreeSurface( loadedSurface );
 
         return optimizedSurface;
 
-	}
+    }
     catch ( int e)
     {
         cout << "Error "<< e << "SDL_Error: " << SDL_GetError() <<"\n";
@@ -105,6 +132,7 @@ void EntornoGrafico::loopUser()
     bool quit = false;
     SDL_Event e;
 
+    loadSurfaces();
     pCurrentSurface = pKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
     showImage();
 

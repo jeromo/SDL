@@ -47,7 +47,9 @@
 		</Linker>
 		<Unit filename="cb.bmp" />
 		<Unit filename="include/EntornoGrafico.h" />
+		<Unit filename="include/EntornoGraficoRenderizado.h" />
 		<Unit filename="src/EntornoGrafico.cpp" />
+		<Unit filename="src/EntornoGraficoRenderizado.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Extensions>
 			<envvars />

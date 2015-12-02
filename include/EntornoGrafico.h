@@ -2,6 +2,7 @@
 #define ENTORNOGRAFICO_H
 
 #include <SDL.h>
+#include <SDL_image.h>
 #include <iostream>
 #include <string>
 
@@ -31,7 +32,6 @@ public:
     void loopUser();
 
 protected:
-private:
     static const int SCREEN_WIDTH = 640;
     static const int SCREEN_HEIGHT = 480;
 

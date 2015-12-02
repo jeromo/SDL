@@ -3,7 +3,7 @@
 and may not be redistributed without written permission.*/
 
 //Using SDL and standard IO
-#include "EntornoGrafico.h"
+#include "EntornoGraficoRenderizado.h"
 
 
 
@@ -11,7 +11,7 @@ and may not be redistributed without written permission.*/
 
 int main( int argc, char* args[] )
 {
-    EntornoGrafico x;
+    EntornoGraficoRenderizado x;
 
     x.loopUser();
 
