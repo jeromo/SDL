@@ -35,10 +35,10 @@ protected:
     static const int SCREEN_WIDTH = 640;
     static const int SCREEN_HEIGHT = 480;
 
-    SDL_Window* pWindow = NULL;
-    SDL_Surface* pScreenSurface = NULL;
-    SDL_Surface* pKeyPressSurfaces[ KEY_PRESS_SURFACE_TOTAL ];
-    SDL_Surface* pCurrentSurface = NULL;
+    SDL_Window* window = NULL;
+    SDL_Surface* screenSurface = NULL;
+    SDL_Surface* keyPressSurfaces[ KEY_PRESS_SURFACE_TOTAL ];
+    SDL_Surface* currentSurface = NULL;
 
     void init();
     void showImage();

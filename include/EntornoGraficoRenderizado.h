@@ -12,8 +12,8 @@ class EntornoGraficoRenderizado : public EntornoGrafico
         void loopUser();
     protected:
     private:
-        SDL_Renderer* pRenderer = NULL;
-        SDL_Texture* pTexture = NULL;
+        SDL_Renderer* renderer = NULL;
+        SDL_Texture* texture = NULL;
 
         bool loadMedia();
         SDL_Texture* loadTexture( string path );

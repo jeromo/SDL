@@ -317,7 +317,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1449068614 /home/jrojo/Projects/C/SDL/include/EntornoGrafico.h
+1449131109 /home/jrojo/Projects/C/SDL/include/EntornoGrafico.h
 	<SDL.h>
 	<SDL_image.h>
 	<iostream>
@@ -338,6 +338,6 @@
 1449069671 source:/home/jrojo/Projects/C/SDL/src/EntornoGraficoRenderizado.cpp
 	"EntornoGraficoRenderizado.h"
 
-1449071756 /home/jrojo/Projects/C/SDL/include/EntornoGraficoRenderizado.h
+1449130972 /home/jrojo/Projects/C/SDL/include/EntornoGraficoRenderizado.h
 	<EntornoGrafico.h>
 

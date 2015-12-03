@@ -8,11 +8,11 @@ EntornoGraficoRenderizado::EntornoGraficoRenderizado():EntornoGrafico()
             throw ERR_SDL_INIT;
 
 
-        pRenderer = SDL_CreateRenderer( pWindow, -1, SDL_RENDERER_ACCELERATED );
-        if( pRenderer == NULL )
+        renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+        if( renderer == NULL )
             throw ERR_SDL_INIT;
 
-        SDL_SetRenderDrawColor( pRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+        SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
     }
     catch ( int e)
     {
@@ -34,8 +34,8 @@ bool EntornoGraficoRenderizado::loadMedia()
 
 	string media = IMAGES_DIR;
 	media  += "/viewport.png";
-	pTexture = loadTexture( media );
-	if( pTexture == NULL )
+	texture = loadTexture( media );
+	if( texture == NULL )
 	{
 		printf( "Failed to load texture image!\n" );
 		success = false;
@@ -58,7 +58,7 @@ SDL_Texture* EntornoGraficoRenderizado::loadTexture( string path )
 	else
 	{
 		//Create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface( pRenderer, loadedSurface );
+        newTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
 		if( newTexture == NULL )
 		{
 			printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
@@ -88,8 +88,8 @@ void EntornoGraficoRenderizado::loopUser()
             {
                 quit = true;
             }
-				SDL_SetRenderDrawColor( pRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-				SDL_RenderClear( pRenderer );
+				SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+				SDL_RenderClear( renderer );
 
 				//Top left corner viewport
 				SDL_Rect topLeftViewport;
@@ -97,10 +97,10 @@ void EntornoGraficoRenderizado::loopUser()
 				topLeftViewport.y = 0;
 				topLeftViewport.w = SCREEN_WIDTH / 2;
 				topLeftViewport.h = SCREEN_HEIGHT / 2;
-				SDL_RenderSetViewport( pRenderer, &topLeftViewport );
+				SDL_RenderSetViewport( renderer, &topLeftViewport );
 
 				//Render texture to screen
-				SDL_RenderCopy( pRenderer, pTexture, NULL, NULL );
+				SDL_RenderCopy( renderer, texture, NULL, NULL );
 
 
 				//Top right viewport
@@ -109,10 +109,10 @@ void EntornoGraficoRenderizado::loopUser()
 				topRightViewport.y = 0;
 				topRightViewport.w = SCREEN_WIDTH / 2;
 				topRightViewport.h = SCREEN_HEIGHT / 2;
-				SDL_RenderSetViewport( pRenderer, &topRightViewport );
+				SDL_RenderSetViewport( renderer, &topRightViewport );
 
 				//Render texture to screen
-				SDL_RenderCopy( pRenderer, pTexture, NULL, NULL );
+				SDL_RenderCopy( renderer, texture, NULL, NULL );
 
 
 				//Bottom viewport
@@ -121,15 +121,15 @@ void EntornoGraficoRenderizado::loopUser()
 				bottomViewport.y = SCREEN_HEIGHT / 2;
 				bottomViewport.w = SCREEN_WIDTH;
 				bottomViewport.h = SCREEN_HEIGHT / 2;
-				SDL_RenderSetViewport( pRenderer, &bottomViewport );
+				SDL_RenderSetViewport( renderer, &bottomViewport );
 
 
 				//Render texture to screen
-				SDL_RenderCopy( pRenderer, pTexture, NULL, NULL );
+				SDL_RenderCopy( renderer, texture, NULL, NULL );
 
 
 				//Update screen
-				SDL_RenderPresent( pRenderer );        }
+				SDL_RenderPresent( renderer );        }
 
     }
 
